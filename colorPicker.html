@@ -1,0 +1,236 @@
+<html>  
+  <head>
+    <meta charset="utf-8">
+    <title>Color Game</title>
+  </head>
+  <link rel="stylesheet" href="color.css">
+  <body>
+<h1>
+  The Great
+  <br>
+  <span id="rgbCode">RGB</span>
+  <br>
+  Color Picking Game
+</h1>
+
+<div id="stripe">
+  <button id="reset">New Colors</button>
+  <span id="message"></span>
+  <button id="easyBtn">Easy</button>
+  <button class="selected" id ="hardBtn">Hard</button>
+</div>
+
+<div id="container">
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+</div>
+
+</body>
+</html>
+
+
+<script>
+var numSquares = 6;
+var colors = generateRandomColors(numSquares);
+var square = document.querySelectorAll(".square");
+var pickedColor = pickColor();
+var rgbCode = document.getElementById("rgbCode");
+var messageDisplay = document.querySelector("#message");
+var h1 = document.querySelector("h1");
+var resetButton = document.querySelector("#reset");
+var easyBtn = document.querySelector("#easyBtn");
+var hardBtn = document.querySelector("#hardBtn");
+
+
+easyBtn.addEventListener("click", function(){
+  hardBtn.classList.remove("selected");
+  easyBtn.classList.add("selected");
+  numSquares = 3;
+  colors = generateRandomColors(numSquares);
+  pickedColor = pickColor();
+  rgbCode.textContent = pickedColor;
+  for(var i = 0; i < square.length; i++) {
+    if (colors[i]) {
+      square[i].style.background = colors[i];
+    } else {
+      square[i].style.display = "none";
+    }
+  }
+});
+
+hardBtn.addEventListener("click", function(){
+  easyBtn.classList.remove("selected");
+  hardBtn.classList.add("selected");
+  numSquares = 6;
+  colors = generateRandomColors(numSquares);
+  pickedColor = pickColor();
+  rgbCode.textContent = pickedColor;
+  for(var i = 0; i < square.length; i++) {
+      square[i].style.background = colors[i];
+      square[i].style.display = "block";
+  }
+});
+
+resetButton.addEventListener("click", function(){
+  //generate all new colors
+  colors = generateRandomColors(numSquares);
+  //pick a new random color from the array
+  pickedColor = pickColor();
+  //change colorDisplay to match picked color
+  rgbCode.textContent = pickedColor;
+  this.textContent = "New Color";
+  messageDisplay.textContent = "";
+  //change colors of squares
+  for (var i = 0; i < square.length; i++) {
+    square[i].style.background = colors[i];
+  }
+  h1.style.background = "steelblue";
+})
+
+rgbCode.textContent = pickedColor;
+
+for(var i = 0; i < square.length; i++) {
+  //add initial colors to squares
+  square[i].style.background = colors[i];
+  //add click listeners to squares
+  square[i].addEventListener("click", function() {
+    //grab color of picked square
+    var clickedColor = this.style.background;
+    //compare color to pickedColor
+    if (clickedColor === pickedColor) {
+      messageDisplay.textContent = "Good Job!";
+      resetButton.textContent = "Play Again ?";
+      changeColors(clickedColor);
+      h1.style.background = clickedColor;
+    }else{
+      this.style.background = "#232323";
+      messageDisplay.textContent = "Try Again";
+    }
+  })
+}
+
+function changeColors(color){
+  //loop through all squares
+for (var i = 0; i < square.length; i++) {
+    //change each color to match given color
+    square[i].style.background = color;
+}
+
+}
+
+function pickColor(){
+var random = Math.floor(Math.random() * colors.length)
+return colors[random];
+}
+
+function generateRandomColors(num){
+  //make and array
+  var arr = []
+  //add num random colors to array
+  for (var i = 0; i < num; i++) {
+    arr.push(randomColor())
+    //get random color and push into array
+  }
+  //return that array
+  return arr;
+}
+
+function randomColor(){
+  //pick a "red" from 0-255
+var r = Math.floor(Math.random() * 256)
+  //pick a "green" from 0-255
+var g = Math.floor(Math.random() * 256)
+  //pick a "blue" from 0-255
+var b = Math.floor(Math.random() * 256)
+
+return "rgb(" + r +", " + g + ", " + b +")";
+}
+
+
+</script>
+
+ <style>
+  
+  body {
+  background-color: #232323;
+  margin: 0;
+  font-family: sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+
+.square {
+  width: 30%;
+  background: white;
+  padding-bottom: 30%;
+  float: left;
+  margin: 1.66%;
+  border-radius: 10%;
+  transition: background 0.7s;
+  -webkit-transition: background 0.7s;
+  -moz-transition: background 0.7s;
+}
+
+#container {
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+h1 {
+  color: white;
+  line-height: 1.5;
+  text-align: center;
+  background-color: steelblue;
+  margin: 0;
+  padding: 20px 0;
+}
+
+#stripe {
+  background: white;
+  height: 30px;
+  text-align: center;
+  color: black;
+}
+
+.selected {
+  color: white;
+  background: steelblue;
+}
+
+#rgbCode {
+  font-size: 200%;
+}
+
+button {
+  border: none;
+  background: none;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  height: 100%;
+  font-weight: 700;
+  color: steelblue;
+  letter-spacing: 1px;
+  font-size: inherit;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  outline: none;
+}
+
+button:hover{
+  color: white;
+  background: steelblue;
+}
+
+#message{
+  display: inline-block;
+  width: 20%;
+}
+
+
+
+</style>
